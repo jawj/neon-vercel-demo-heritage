@@ -30,7 +30,7 @@ export default function Home() {
           </ul>}
 
       <p>
-        Heritage site data copyright &copy; 1992 – {new Date().getFullYear()}
+        Heritage site data copyright &copy; 1992 – {new Date().getFullYear()} {' '}
         <a href="https://whc.unesco.org">UNESCO/World Heritage Centre</a>. All rights reserved.
       </p>
     </div>
