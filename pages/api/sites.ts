@@ -1,15 +1,20 @@
 import { Client } from 'pg';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-interface Data {
+export interface SitesData {
   longitude: number;
   latitude: number;
-  nearestSites: any[];
+  nearestSites: {
+    id_no: number;
+    name_en: string;
+    category: string;
+    distance: number;
+  }[];
 }
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<SitesData>
 ) {
   function getCoord(coord: 'latitude' | 'longitude') {
     const sources: [any, string][] = [
