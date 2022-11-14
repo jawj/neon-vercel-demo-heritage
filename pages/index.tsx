@@ -16,7 +16,7 @@ export default function Home() {
       {error ? <p>Failed to load</p> :
         !data ? <p>Loading...</p> :
           <ul>{
-            data.map((site: any) =>
+            data.nearestSites.map((site: any) =>
               <li key={site.id_no}><a href={`https://whc.unesco.org/en/list/${site.id_no}/`}
                 style={{ backgroundImage: `url(https://whc.unesco.org/uploads/sites/gallery/google/site_${site.id_no}.jpg` }}>
                 <span className="name">{site.name_en}</span>
