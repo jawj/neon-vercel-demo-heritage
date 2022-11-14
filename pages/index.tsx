@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import useSWR from 'swr';
 import type { SitesData } from './api/sites';
 
@@ -15,10 +16,9 @@ export default function Home() {
 
       <h1>Your nearest world heritage sites</h1>
 
-      {error ? <p>Failed to load</p> :
-        !data ? <p>Loading...</p> :
-
-          <ul className="sites">{
+      {error ? <p className="error">Failed to load</p> :
+        !data ? <p className="loading"><Image src="loading.svg" alt="Loading spinner" /> Loading &hellip;</p> :
+          <div className="sites"><ul>{
             data.nearestSites.map(site =>
               <li key={site.id_no}><a href={`https://whc.unesco.org/en/list/${site.id_no}/`}
                 style={{ backgroundImage: `url(https://whc.unesco.org/uploads/sites/gallery/google/site_${site.id_no}.jpg` }}>
@@ -27,7 +27,7 @@ export default function Home() {
                 <span className="distance">{Math.round(site.distance / 1000)} km</span>
               </a></li>
             )}
-          </ul>
+          </ul></div>
       }
       <p>
         Heritage site data copyright &copy; 1992 – {new Date().getFullYear()} {' '}
