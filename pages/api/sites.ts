@@ -26,6 +26,7 @@ export default async function handler(
       [req.headers, `x-vercel-ip-${coord}`],  // try Vercel geolocation headers
       [{ latitude: '37.81', longitude: '-122.47' }, coord]  // fall back to San Francisco
     ];
+    console.log(sources);
     let result = NaN;
     for (const [source, key] of sources) {
       const param = source[key];
