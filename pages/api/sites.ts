@@ -1,5 +1,5 @@
 import { Client } from '../../serverless';
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
   runtime: 'experimental-edge'
@@ -16,12 +16,9 @@ export interface SitesData {
   }[];
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<SitesData>
-) {
+export default async function handler(req: NextRequest) {
   function getCoord(coord: 'latitude' | 'longitude') {
-    const query = Object.fromEntries(new URL(req.url ?? 'http://x').searchParams)
+    const query = Object.fromEntries(new URL(req.url ?? 'http://xyz').searchParams)
     const sources: [any, string][] = [
       [query, coord],  // try query string: ?longitude=-12.34&latitude=56.78
       [req.headers, `x-vercel-ip-${coord}`],  // try Vercel geolocation headers
@@ -50,6 +47,6 @@ export default async function handler(
     [longitude, latitude]
   );  // no cast needed: PostGIS casts geometry -> geography, never the reverse: https://gis.stackexchange.com/a/367374
 
-  res.status(200).json({ longitude, latitude, nearestSites: rows });
   await client.end();
+  return NextResponse.json({ longitude, latitude, nearestSites: rows });
 }
