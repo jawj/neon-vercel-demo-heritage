@@ -19,13 +19,13 @@ export interface SitesData {
 export default async function handler(req: NextRequest) {
   function getCoord(coord: 'latitude' | 'longitude') {
     const sources: any[] = [
-      Object.fromEntries(new URL(req.url ?? 'http://xyz').searchParams),  // ?latitude=x,longitude=y
+      Object.fromEntries(new URL(req.url ?? 'http://xyz').searchParams),  // ?latitude=x&longitude=y
       req.geo,  // IP geolocation
       { latitude: '37.81', longitude: '-122.47' }  // fallback
     ];
     let result = NaN;
-    for (const [source, key] of sources) {
-      const param = source[key];
+    for (const source of sources) {
+      const param = source[coord];
       result = typeof param === 'string' ? parseFloat(param) : Array.isArray(param) ? parseFloat(param[0]) : result;
       if (!isNaN(result)) break;
     }
