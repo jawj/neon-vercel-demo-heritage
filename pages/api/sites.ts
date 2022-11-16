@@ -1,4 +1,4 @@
-import { Client } from 'pg';
+import { Client } from '@neondatabase/serverless';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export const config = {
