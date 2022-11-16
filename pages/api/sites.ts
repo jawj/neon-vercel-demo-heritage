@@ -18,11 +18,10 @@ export interface SitesData {
 
 export default async function handler(req: NextRequest) {
   function getCoord(coord: 'latitude' | 'longitude') {
-    const query = Object.fromEntries(new URL(req.url ?? 'http://xyz').searchParams)
-    const sources: [any, string][] = [
-      [query, coord],  // try query string: ?longitude=-12.34&latitude=56.78
-      [req.headers, `x-vercel-ip-${coord}`],  // try Vercel geolocation headers
-      [{ latitude: '37.81', longitude: '-122.47' }, coord]  // fall back to San Francisco
+    const sources: any[] = [
+      Object.fromEntries(new URL(req.url ?? 'http://xyz').searchParams),  // ?latitude=x,longitude=y
+      req.geo,  // IP geolocation
+      { latitude: '37.81', longitude: '-122.47' }  // fallback
     ];
     let result = NaN;
     for (const [source, key] of sources) {
