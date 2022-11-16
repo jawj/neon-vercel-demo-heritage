@@ -21,12 +21,12 @@ export default async function handler(
   res: NextApiResponse<SitesData>
 ) {
   function getCoord(coord: 'latitude' | 'longitude') {
+    const query = Object.fromEntries(new URL(req.url ?? 'http://x').searchParams)
     const sources: [any, string][] = [
-      [req.query, coord],  // try query string: ?longitude=-12.34&latitude=56.78
+      [query, coord],  // try query string: ?longitude=-12.34&latitude=56.78
       [req.headers, `x-vercel-ip-${coord}`],  // try Vercel geolocation headers
       [{ latitude: '37.81', longitude: '-122.47' }, coord]  // fall back to San Francisco
     ];
-    console.log(sources, req);
     let result = NaN;
     for (const [source, key] of sources) {
       const param = source[key];
