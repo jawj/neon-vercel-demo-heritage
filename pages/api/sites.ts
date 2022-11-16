@@ -16,23 +16,27 @@ export interface SitesData {
   }[];
 }
 
+function getCoords(req: NextRequest) {
+  const coordSources: any[] = [
+    Object.fromEntries(new URL(req.url ?? 'http://xyz').searchParams),  // (1) try URL query: ?latitude=x&longitude=y
+    req.geo,  // (2) try IP geolocation
+    { latitude: '37.81', longitude: '-122.47' }  // (3) fall back to fixed point
+  ];
+
+  return (<const>['longitude', 'latitude']).reduce((coords, coord) => {
+    coords[coord] = coordSources.reduce((result, source) => {
+      if (!isNaN(result)) return result;  // already got a result? just feed it forwards
+      const param = source[coord] as any;
+      return typeof param === 'string' ? parseFloat(param) :
+        Array.isArray(param) ? parseFloat(param[0]) :
+          result;
+    }, NaN);
+    return coords;
+  }, {} as { longitude: number; latitude: number; });
+}
+
 export default async function handler(req: NextRequest) {
-  function getCoord(coord: 'latitude' | 'longitude') {
-    const sources: any[] = [
-      Object.fromEntries(new URL(req.url ?? 'http://xyz').searchParams),  // ?latitude=x&longitude=y
-      req.geo,  // IP geolocation
-      { latitude: '37.81', longitude: '-122.47' }  // fallback
-    ];
-    let result = NaN;
-    for (const source of sources) {
-      const param = source[coord];
-      result = typeof param === 'string' ? parseFloat(param) : Array.isArray(param) ? parseFloat(param[0]) : result;
-      if (!isNaN(result)) break;
-    }
-    return result;
-  }
-  const longitude = getCoord('longitude');
-  const latitude = getCoord('latitude');
+  const { longitude, latitude } = getCoords(req);
 
   const client = new Client(process.env.DATABASE_URL);
   await client.connect();
