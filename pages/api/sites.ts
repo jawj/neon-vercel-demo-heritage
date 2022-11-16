@@ -1,6 +1,10 @@
 import { Client } from 'pg';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+export const config = {
+  runtime: 'experimental-edge'
+};
+
 export interface SitesData {
   longitude: number;
   latitude: number;
