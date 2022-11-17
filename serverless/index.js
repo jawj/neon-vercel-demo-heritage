@@ -3879,7 +3879,7 @@ var init_net = __esm({
           tls_emscripten({
             instantiateWasm: (info, receive) => {
               if (_Socket.wasmPath === void 0) {
-                (process.env.VERCEL ? import("./tlsImportVercel-FQ4QJVZX.js") : import("./tlsImportCf-J3SUTGBL.js")).then((tlsImport) => receive(tlsImport.getWasmInstance(info)));
+                (typeof EdgeRuntime === "string" ? import("./tlsImportVercel-FQ4QJVZX.js") : import("./tlsImportCf-J3SUTGBL.js")).then((tlsImport) => receive(tlsImport.getWasmInstance(info)));
               } else {
                 WebAssembly.instantiateStreaming(fetch(_Socket.wasmPath), info).then(({ instance }) => {
                   receive(instance);
