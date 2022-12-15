@@ -28,8 +28,7 @@ function getCoords(req: NextRequest) {
       if (!isNaN(result)) return result;  // already got a result? just feed it forwards
       const param = source[coord] as any;
       return typeof param === 'string' ? parseFloat(param) :
-        Array.isArray(param) ? parseFloat(param[0]) :
-          result;
+        Array.isArray(param) ? parseFloat(param[0]) : result;
     }, NaN);
     return coords;
   }, {} as { longitude: number; latitude: number; });

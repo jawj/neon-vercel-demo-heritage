@@ -17,7 +17,7 @@ export default function Home() {
       <h1>Your nearest world heritage sites</h1>
 
       {error ? <p className="error">Error: failed to load</p> :
-        !data ? <p className="loading"><Image src="loading.svg" alt="Loading spinner" width="66" height="66" /><br />Loading &hellip;</p> :
+        !data ? <p className="loading"><Image src="/loading.svg" alt="Loading spinner" width="66" height="66" /><br />Loading &hellip;</p> :
           <div className="sites"><ul>{
             data.nearestSites.map(site =>
               <li key={site.id_no}><a href={`https://whc.unesco.org/en/list/${site.id_no}/`}
