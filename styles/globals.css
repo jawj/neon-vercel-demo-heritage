@@ -11,10 +11,10 @@ h1 {
   border-bottom: 1px solid #ccc;
 }
 
-h1,
-h2,
-h3 {
+
+h2 {
   clear: both;
+  margin-top: 1em;
 }
 
 .loading {
