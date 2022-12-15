@@ -25,23 +25,30 @@ function Nearest() {
 }
 
 function Timings() {
-  const { data: gmwss_1 } = useSWR<SitesData>(() => `/api/sites?db=gm-wss&x=1`);
+  const { data: gmwss_1 } = useSWR<SitesData>(`/api/sites?db=gm-wss&x=1`);
   const { data: gmwss_2 } = useSWR<SitesData>(() => gmwss_1 && `/api/sites?db=gm-wss&x=2`);
   const { data: gmwss_3 } = useSWR<SitesData>(() => gmwss_2 && `/api/sites?db=gm-wss&x=3`);
   const { data: gmwss_4 } = useSWR<SitesData>(() => gmwss_3 && `/api/sites?db=gm-wss&x=4`);
   const { data: gmwss_5 } = useSWR<SitesData>(() => gmwss_4 && `/api/sites?db=gm-wss&x=5`);
 
-  const { data: gmsubtls_1 } = useSWR<SitesData>(() => `/api/sites?db=gm-subtls&x=1`);
+
+  const { data: gmsubtls_1 } = useSWR<SitesData>(() => gmwss_5 && `/api/sites?db=gm-subtls&x=1`);
   const { data: gmsubtls_2 } = useSWR<SitesData>(() => gmsubtls_1 && `/api/sites?db=gm-subtls&x=2`);
   const { data: gmsubtls_3 } = useSWR<SitesData>(() => gmsubtls_2 && `/api/sites?db=gm-subtls&x=3`);
   const { data: gmsubtls_4 } = useSWR<SitesData>(() => gmsubtls_3 && `/api/sites?db=gm-subtls&x=4`);
   const { data: gmsubtls_5 } = useSWR<SitesData>(() => gmsubtls_4 && `/api/sites?db=gm-subtls&x=5`);
 
-  const { data: neonsubtls_1 } = useSWR<SitesData>(() => `/api/sites?db=neon-subtls&x=1`);
-  const { data: neonsubtls_2 } = useSWR<SitesData>(() => neonsubtls_1 && `/api/sites?db=neon-subtls&x=2`);
-  const { data: neonsubtls_3 } = useSWR<SitesData>(() => neonsubtls_2 && `/api/sites?db=neon-subtls&x=3`);
-  const { data: neonsubtls_4 } = useSWR<SitesData>(() => neonsubtls_3 && `/api/sites?db=neon-subtls&x=4`);
-  const { data: neonsubtls_5 } = useSWR<SitesData>(() => neonsubtls_4 && `/api/sites?db=neon-subtls&x=5`);
+  // const { data: neonsubtls_1 } = useSWR<SitesData>(() => gmsubtls_5 && `/api/sites?db=neon-subtls&x=1`);
+  // const { data: neonsubtls_2 } = useSWR<SitesData>(() => neonsubtls_1 && `/api/sites?db=neon-subtls&x=2`);
+  // const { data: neonsubtls_3 } = useSWR<SitesData>(() => neonsubtls_2 && `/api/sites?db=neon-subtls&x=3`);
+  // const { data: neonsubtls_4 } = useSWR<SitesData>(() => neonsubtls_3 && `/api/sites?db=neon-subtls&x=4`);
+  // const { data: neonsubtls_5 } = useSWR<SitesData>(() => neonsubtls_4 && `/api/sites?db=neon-subtls&x=5`);
+
+  const neonsubtls: number[] = [];
+  for (let i = 0; i < 5; i++) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    neonsubtls.push(useSWR<SitesData>(() => (gmsubtls_5 || neonsubtls[i - 1]) && `/api/sites?db=neon-subtls&x=${i}`).data!.duration);
+  }
 
   return <>
     <h2>Timings</h2>
@@ -64,11 +71,7 @@ function Timings() {
       </li>
       <li>
         Ordinary WebSocket (ws://) + <a href="https://github.com/jawj/subtls">subtls</a> to separate proxy and Neon DB:<br />
-        {neonsubtls_1?.duration ?? '...'} ms, {' '}
-        {neonsubtls_2?.duration ?? '...'} ms, {' '}
-        {neonsubtls_3?.duration ?? '...'} ms, {' '}
-        {neonsubtls_4?.duration ?? '...'} ms, {' '}
-        {neonsubtls_5?.duration ?? '...'} ms {' '}
+        {neonsubtls.map(duration => `${duration} ms`).join(', ')}
       </li>
     </ul>
   </>;
