@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import Chart from "react-apexcharts";
 import useSWR, { SWRConfig } from 'swr';
 import type { SitesData } from './api/sites';
 
@@ -48,22 +47,7 @@ function Timings() {
 
   return <>
     <h2>Timings</h2>
-    <Chart
-      options={{ xaxis: { categories: ['#1', '#2', '#3', '#4', '#5'] } }}
-      series={[
-        {
-          name: 'wss://', data: [
-            gmwss_1?.duration ?? 0,
-            gmwss_1?.duration ?? 0,
-            gmwss_1?.duration ?? 0,
-            gmwss_1?.duration ?? 0,
-            gmwss_1?.duration ?? 0,
-          ]
-        }
-      ]}
-      type="line"
-      width="500"
-    />
+
     <ul>
       <li>
         Secure WebSocket (wss://) to co-located proxy and DB:<br />
