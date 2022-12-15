@@ -1,4 +1,4 @@
-import { Client, neonConfig } from '../../serverless';
+import { Client, neonConfig } from '@jawj/test-serverless';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
@@ -54,11 +54,13 @@ export default async function handler(req: NextRequest) {
     { latitude: '37.81', longitude: '-122.47' }  // (3) fall back to fixed a point
   );
 
-  const wss = queryParams.db === 'b';
-  const dbURL = wss ? process.env.DATABASE_URL_B! : process.env.DATABASE_URL_A!;
-  neonConfig.useSecureWebSocket = neonConfig.disableTLS = wss;
+  // query param db: 'gm-wss' | 'gm-subtls' | 'neon'
+
+  const wss = queryParams.db === 'gm-wss';
+  const dbURL = queryParams.db === 'neon' ? process.env.DATABASE_URL_NEON! : process.env.DATABASE_URL_GM!;
 
   const t0 = Date.now();
+  neonConfig.useSecureWebSocket = neonConfig.disableTLS = wss;
   const rows = await runQuery(dbURL, longitude, latitude);
   const duration = Date.now() - t0;
 
