@@ -1,4 +1,4 @@
-import { Client } from '../../serverless';
+import { Client, neonConfig } from '../../serverless';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
@@ -14,15 +14,10 @@ export interface SitesData {
     category: string;
     distance: number;
   }[];
+  duration: number;
 }
 
-function getCoords(req: NextRequest) {
-  const coordSources: any[] = [
-    Object.fromEntries(new URL(req.url ?? 'http://xyz').searchParams),  // (1) try URL query: ?latitude=x&longitude=y
-    req.geo,  // (2) try IP geolocation
-    { latitude: '37.81', longitude: '-122.47' }  // (3) fall back to fixed point
-  ];
-
+function getCoords(...coordSources: any[]) {
   return (<const>['longitude', 'latitude']).reduce((coords, coord) => {
     coords[coord] = coordSources.reduce((result, source) => {
       if (!isNaN(result)) return result;  // already got a result? just feed it forwards
@@ -34,10 +29,8 @@ function getCoords(req: NextRequest) {
   }, {} as { longitude: number; latitude: number; });
 }
 
-export default async function handler(req: NextRequest) {
-  const { longitude, latitude } = getCoords(req);
-
-  const client = new Client(process.env.DATABASE_URL);
+async function runQuery(dbURL: string, longitude: number, latitude: number) {
+  const client = new Client(dbURL);
   await client.connect();
 
   const { rows } = await client.query(`
@@ -49,6 +42,25 @@ export default async function handler(req: NextRequest) {
     [longitude, latitude]
   );  // no cast needed: PostGIS casts geometry -> geography, never the reverse: https://gis.stackexchange.com/a/367374
 
-  await client.end();
-  return NextResponse.json({ longitude, latitude, nearestSites: rows });
+  client.end();  // TODO: is there an equivalent to Cloudflare's `ctx.waitFor`?
+  return rows;
+}
+
+export default async function handler(req: NextRequest) {
+  const queryParams = Object.fromEntries(new URL(req.url ?? 'http://xyz').searchParams);
+  const { longitude, latitude } = getCoords(
+    queryParams,                                 // (1) try URL query: ?latitude=x&longitude=y
+    req.geo,                                     // (2) try IP geolocation
+    { latitude: '37.81', longitude: '-122.47' }  // (3) fall back to fixed a point
+  );
+
+  const wss = queryParams.db === 'b';
+  const dbURL = wss ? process.env.DATABASE_URL_B! : process.env.DATABASE_URL_A!;
+  neonConfig.useSecureWebSocket = neonConfig.disableTLS = wss;
+
+  const t0 = Date.now();
+  const rows = await runQuery(dbURL, longitude, latitude);
+  const duration = Date.now() - t0;
+
+  return NextResponse.json({ longitude, latitude, nearestSites: rows, duration });
 }
