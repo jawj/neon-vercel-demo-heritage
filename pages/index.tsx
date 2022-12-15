@@ -7,11 +7,11 @@ export default function Home() {
   const fetcher = (url: string) => fetch(url).then(res => res.json());
   const { data, error } = useSWR<SitesData>('/api/sites?db=gm-wss', fetcher);
 
-  const { data: gmwss_1_data, error: gmwss_1_error } = useSWR<SitesData>(`/api/sites?db=gm-wss&x=1`);
-  const { data: gmwss_2_data, error: gmwss_2_error } = useSWR<SitesData>(() => gmwss_1_data && `/api/sites?db=gm-wss&x=2`);
-  const { data: gmwss_3_data, error: gmwss_3_error } = useSWR<SitesData>(() => gmwss_2_data && `/api/sites?db=gm-wss&x=3`);
-  const { data: gmwss_4_data, error: gmwss_4_error } = useSWR<SitesData>(() => gmwss_3_data && `/api/sites?db=gm-wss&x=4`);
-  const { data: gmwss_5_data, error: gmwss_5_error } = useSWR<SitesData>(() => gmwss_4_data && `/api/sites?db=gm-wss&x=5`);
+  const { data: gmwss_1_data, error: gmwss_1_error } = useSWR<SitesData>(`/api/sites?db=gm-wss&x=1`, fetcher);
+  const { data: gmwss_2_data, error: gmwss_2_error } = useSWR<SitesData>(() => gmwss_1_data && `/api/sites?db=gm-wss&x=2`, fetcher);
+  const { data: gmwss_3_data, error: gmwss_3_error } = useSWR<SitesData>(() => gmwss_2_data && `/api/sites?db=gm-wss&x=3`, fetcher);
+  const { data: gmwss_4_data, error: gmwss_4_error } = useSWR<SitesData>(() => gmwss_3_data && `/api/sites?db=gm-wss&x=4`, fetcher);
+  const { data: gmwss_5_data, error: gmwss_5_error } = useSWR<SitesData>(() => gmwss_4_data && `/api/sites?db=gm-wss&x=5`, fetcher);
 
   return (
     <div>
@@ -40,7 +40,11 @@ export default function Home() {
       <ul>
         <li>
           Secure WebSocket (wss://) to co-located proxy and DB:
-          {gmwss_1_data?.duration} {gmwss_2_data?.duration} {gmwss_3_data?.duration} {gmwss_4_data?.duration} {gmwss_5_data?.duration}
+          {gmwss_1_data?.duration ?? gmwss_1_error}
+          {gmwss_2_data?.duration ?? gmwss_2_error}
+          {gmwss_3_data?.duration ?? gmwss_3_error}
+          {gmwss_4_data?.duration ?? gmwss_4_error}
+          {gmwss_5_data?.duration ?? gmwss_5_error}
         </li>
       </ul>
       <p>
