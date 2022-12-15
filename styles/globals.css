@@ -11,17 +11,23 @@ h1 {
   border-bottom: 1px solid #ccc;
 }
 
+h1,
+h2,
+h3 {
+  clear: both;
+}
+
 .loading {
   text-align: center;
   color: #aaa;
 }
 
-ul {
+.sites ul {
   margin: 0;
   padding: 0;
 }
 
-li {
+.sites li {
   display: block;
   float: left;
   margin: 1ex;
@@ -34,7 +40,7 @@ a {
   color: #55e;
 }
 
-li a {
+.sites li a {
   display: block;
   width: 12em;
   height: 16em;
@@ -45,7 +51,7 @@ li a {
   color: #fff;
 }
 
-li a:hover .name {
+.sites li a:hover .name {
   padding-top: 1.5em;
 }
 
