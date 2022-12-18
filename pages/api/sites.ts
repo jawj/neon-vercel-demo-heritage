@@ -37,11 +37,17 @@ export default async function handler(req: NextRequest) {
     { latitude: '37.81', longitude: '-122.47' }  // (3) fall back to fixed a point
   );
 
-  // query param `db` should be: 'gm-wss' | 'gm-subtls' (default) | 'neon-subtls'
+  // db: 'gm' | 'neon'
+  // tls: 'wss' | 'subtls'
+  // fast: 'no' | 'yes'
 
-  const wss = queryParams.db === 'gm-wss';
-  const dbURL = queryParams.db === 'neon-subtls' ? process.env.DATABASE_URL_NEON! : process.env.DATABASE_URL_GM!;
+  const dbURL = queryParams.db === 'neon' ? process.env.DATABASE_URL_NEON! : process.env.DATABASE_URL_GM!;
+  const wss = queryParams.tls !== 'subtls';
+  const fast = queryParams.fast === 'yes';
+
   neonConfig.useSecureWebSocket = neonConfig.disableTLS = wss;
+  neonConfig.fastStart = fast;
+
   const t0 = Date.now();
 
   const client = new Client(dbURL);
