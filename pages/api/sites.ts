@@ -2,7 +2,8 @@ import { Client, neonConfig } from '@jawj/test-serverless';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
-  runtime: 'experimental-edge'
+  runtime: 'experimental-edge',
+  regions: ['fra1'],
 };
 
 export interface SitesData {
