@@ -53,36 +53,41 @@ function Nearest() {
 function Timings() {
   // some dubious copy-and-paste coding here, but useSWR does hate to be called in a loop ...
 
-  const { data: a_1 } = useSWR<SitesData>(/*        */ `/api/sites?db=neon&tls=subtls&fast=no&x=1`);
-  const { data: a_2 } = useSWR<SitesData>(() => a_1 && `/api/sites?db=neon&tls=subtls&fast=no&x=2`);
-  const { data: a_3 } = useSWR<SitesData>(() => a_2 && `/api/sites?db=neon&tls=subtls&fast=no&x=3`);
-  const { data: a_4 } = useSWR<SitesData>(() => a_3 && `/api/sites?db=neon&tls=subtls&fast=no&x=4`);
-  const { data: a_5 } = useSWR<SitesData>(() => a_4 && `/api/sites?db=neon&tls=subtls&fast=no&x=5`);
+  const { data: a_1 } = useSWR<SitesData>(/*        */ `/api/sites?db=neon&tls=subtls&fast=no&coalesce=no&x=1`);
+  const { data: a_2 } = useSWR<SitesData>(() => a_1 && `/api/sites?db=neon&tls=subtls&fast=no&coalesce=no&x=2`);
+  const { data: a_3 } = useSWR<SitesData>(() => a_2 && `/api/sites?db=neon&tls=subtls&fast=no&coalesce=no&x=3`);
+  const { data: a_4 } = useSWR<SitesData>(() => a_3 && `/api/sites?db=neon&tls=subtls&fast=no&coalesce=no&x=4`);
+  const { data: a_5 } = useSWR<SitesData>(() => a_4 && `/api/sites?db=neon&tls=subtls&fast=no&coalesce=no&x=5`);
 
-  const { data: b_1 } = useSWR<SitesData>(() => a_5 && `/api/sites?db=gm&tls=subtls&fast=no&x=1`);
-  const { data: b_2 } = useSWR<SitesData>(() => b_1 && `/api/sites?db=gm&tls=subtls&fast=no&x=2`);
-  const { data: b_3 } = useSWR<SitesData>(() => b_2 && `/api/sites?db=gm&tls=subtls&fast=no&x=3`);
-  const { data: b_4 } = useSWR<SitesData>(() => b_3 && `/api/sites?db=gm&tls=subtls&fast=no&x=4`);
-  const { data: b_5 } = useSWR<SitesData>(() => b_4 && `/api/sites?db=gm&tls=subtls&fast=no&x=5`);
+  const { data: b_1 } = useSWR<SitesData>(() => a_5 && `/api/sites?db=gm&tls=subtls&fast=no&coalesce=no&x=1`);
+  const { data: b_2 } = useSWR<SitesData>(() => b_1 && `/api/sites?db=gm&tls=subtls&fast=no&coalesce=no&x=2`);
+  const { data: b_3 } = useSWR<SitesData>(() => b_2 && `/api/sites?db=gm&tls=subtls&fast=no&coalesce=no&x=3`);
+  const { data: b_4 } = useSWR<SitesData>(() => b_3 && `/api/sites?db=gm&tls=subtls&fast=no&coalesce=no&x=4`);
+  const { data: b_5 } = useSWR<SitesData>(() => b_4 && `/api/sites?db=gm&tls=subtls&fast=no&coalesce=no&x=5`);
 
-  const { data: c_1 } = useSWR<SitesData>(() => b_5 && `/api/sites?db=gm&tls=wss&fast=no&x=1`);
-  const { data: c_2 } = useSWR<SitesData>(() => c_1 && `/api/sites?db=gm&tls=wss&fast=no&x=2`);
-  const { data: c_3 } = useSWR<SitesData>(() => c_2 && `/api/sites?db=gm&tls=wss&fast=no&x=3`);
-  const { data: c_4 } = useSWR<SitesData>(() => c_3 && `/api/sites?db=gm&tls=wss&fast=no&x=4`);
-  const { data: c_5 } = useSWR<SitesData>(() => c_4 && `/api/sites?db=gm&tls=wss&fast=no&x=5`);
+  const { data: c_1 } = useSWR<SitesData>(() => b_5 && `/api/sites?db=gm&tls=wss&fast=no&coalesce=no&x=1`);
+  const { data: c_2 } = useSWR<SitesData>(() => c_1 && `/api/sites?db=gm&tls=wss&fast=no&coalesce=no&x=2`);
+  const { data: c_3 } = useSWR<SitesData>(() => c_2 && `/api/sites?db=gm&tls=wss&fast=no&coalesce=no&x=3`);
+  const { data: c_4 } = useSWR<SitesData>(() => c_3 && `/api/sites?db=gm&tls=wss&fast=no&coalesce=no&x=4`);
+  const { data: c_5 } = useSWR<SitesData>(() => c_4 && `/api/sites?db=gm&tls=wss&fast=no&coalesce=no&x=5`);
 
-  const { data: d_1 } = useSWR<SitesData>(() => c_5 && `/api/sites?db=gm&tls=wss&fast=yes&x=1`);
-  const { data: d_2 } = useSWR<SitesData>(() => d_1 && `/api/sites?db=gm&tls=wss&fast=yes&x=2`);
-  const { data: d_3 } = useSWR<SitesData>(() => d_2 && `/api/sites?db=gm&tls=wss&fast=yes&x=3`);
-  const { data: d_4 } = useSWR<SitesData>(() => d_3 && `/api/sites?db=gm&tls=wss&fast=yes&x=4`);
-  const { data: d_5 } = useSWR<SitesData>(() => d_4 && `/api/sites?db=gm&tls=wss&fast=yes&x=5`);
+  const { data: d_1 } = useSWR<SitesData>(() => c_5 && `/api/sites?db=gm&tls=wss&fast=yes&coalesce=no&x=1`);
+  const { data: d_2 } = useSWR<SitesData>(() => d_1 && `/api/sites?db=gm&tls=wss&fast=yes&coalesce=no&x=2`);
+  const { data: d_3 } = useSWR<SitesData>(() => d_2 && `/api/sites?db=gm&tls=wss&fast=yes&coalesce=no&x=3`);
+  const { data: d_4 } = useSWR<SitesData>(() => d_3 && `/api/sites?db=gm&tls=wss&fast=yes&coalesce=no&x=4`);
+  const { data: d_5 } = useSWR<SitesData>(() => d_4 && `/api/sites?db=gm&tls=wss&fast=yes&coalesce=no&x=5`);
+
+  const { data: e_1 } = useSWR<SitesData>(() => d_5 && `/api/sites?db=gm&tls=wss&fast=yes&coalesce=yes&x=1`);
+  const { data: e_2 } = useSWR<SitesData>(() => e_1 && `/api/sites?db=gm&tls=wss&fast=yes&coalesce=yes&x=2`);
+  const { data: e_3 } = useSWR<SitesData>(() => e_2 && `/api/sites?db=gm&tls=wss&fast=yes&coalesce=yes&x=3`);
+  const { data: e_4 } = useSWR<SitesData>(() => e_3 && `/api/sites?db=gm&tls=wss&fast=yes&coalesce=yes&x=4`);
+  const { data: e_5 } = useSWR<SitesData>(() => e_4 && `/api/sites?db=gm&tls=wss&fast=yes&coalesce=yes&x=5`);
 
   return <>
     <h2>Timings</h2>
     <ul>
       <li>
         Ordinary WebSocket (ws://) + <a href="https://github.com/jawj/subtls">subtls</a> to separate proxy and Neon DB:<br />
-
         {a_1?.duration ?? '...'} ms, {' '}
         {a_2?.duration ?? '...'} ms, {' '}
         {a_3?.duration ?? '...'} ms, {' '}
@@ -112,6 +117,14 @@ function Timings() {
         {d_3?.duration ?? '...'} ms, {' '}
         {d_4?.duration ?? '...'} ms, {' '}
         {d_5?.duration ?? '...'} ms  {' '}
+      </li>
+      <li>
+        Secure WebSocket (wss://) to co-located proxy and DB, pipelined, coalesced writes:<br />
+        {e_1?.duration ?? '...'} ms, {' '}
+        {e_2?.duration ?? '...'} ms, {' '}
+        {e_3?.duration ?? '...'} ms, {' '}
+        {e_4?.duration ?? '...'} ms, {' '}
+        {e_5?.duration ?? '...'} ms  {' '}
       </li>
     </ul>
   </>;

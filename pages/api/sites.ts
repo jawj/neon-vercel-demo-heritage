@@ -32,22 +32,27 @@ function getCoords(...coordSources: any[]) {
 
 export default async function handler(req: NextRequest) {
   const queryParams = Object.fromEntries(new URL(req.url ?? 'http://xyz').searchParams);
+
+  // db: 'gm' (default) | 'neon'
+  // tls: 'wss' (default) | 'subtls'
+  // fast: 'no' (default) | 'yes'
+  // coalesce: 'no' (default) | 'yes'
+  // qnow: 'no' (default) | 'yes'
+
+  const dbURL = queryParams.db === 'neon' ? process.env.DATABASE_URL_NEON! : process.env.DATABASE_URL_GM!;
+  const wss = queryParams.tls !== 'subtls';
+  const fast = queryParams.fast === 'yes';
+  const coalesce = queryParams.coalesce === 'yes';
+
+  neonConfig.useSecureWebSocket = neonConfig.disableTLS = wss;
+  neonConfig.fastStart = fast;
+  neonConfig.coalesceWrites = coalesce;
+
   const { longitude, latitude } = getCoords(
     queryParams,                                 // (1) try URL query: ?latitude=x&longitude=y
     req.geo,                                     // (2) try IP geolocation
     { latitude: '37.81', longitude: '-122.47' }  // (3) fall back to fixed a point
   );
-
-  // db: 'gm' | 'neon'
-  // tls: 'wss' | 'subtls'
-  // fast: 'no' | 'yes'
-
-  const dbURL = queryParams.db === 'neon' ? process.env.DATABASE_URL_NEON! : process.env.DATABASE_URL_GM!;
-  const wss = queryParams.tls !== 'subtls';
-  const fast = queryParams.fast === 'yes';
-
-  neonConfig.useSecureWebSocket = neonConfig.disableTLS = wss;
-  neonConfig.fastStart = fast;
 
   const t0 = Date.now();
 
